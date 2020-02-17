@@ -27,9 +27,10 @@ def test_should_return_30():
 
 def test_should_return_123456():
     dice_roll = [1654, 1654, 50995, 30864, 1654, 50995, 22747,
-                                            1654, 1654, 1654, 1654, 1654, 30864, 4868, 1654, 4868, 1654,
-                                            30864, 4868, 30864]
+                 1654, 1654, 1654, 1654, 1654, 30864, 4868, 1654, 4868, 1654,
+                 30864, 4868, 30864]
     assert yahtzee_upper(dice_roll) == 123456
+
 
 @pytest.mark.timeout(1)
 def test_should_return_performance():
@@ -38,7 +39,7 @@ def test_should_return_performance():
         lines = [int(x) for x in lines]
     start_time = time.time()
     actual = yahtzee_upper(lines)
-    print(actual)
     time_taken = time.time() - start_time;
-    assert actual == 123456
+    print("\n\tTime taken for {} length list: {} seconds".format(len(lines), time_taken))
+    assert actual == 31415926535
     assert time_taken < 0.2

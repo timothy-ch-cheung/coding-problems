@@ -1,10 +1,16 @@
-from functools import  reduce
-
 def yahtzee_upper(dice_rolls):
-    sorted(dice_rolls)
-    scores = [get_score(dice_rolls, x) for x in dice_rolls]
+    dice_rolls = sorted(dice_rolls)
+    previous = None
+    running_total = 0
+    scores = []
+    for roll in dice_rolls:
+        if previous is None:
+            running_total += roll
+        elif roll == previous:
+            running_total += roll
+        else:
+            scores.append(running_total)
+            running_total = roll
+        previous = roll
+    scores.append(running_total)
     return max(scores)
-
-def get_score(dice_rolls, choice):
-    filter_rolls = filter(lambda x: (x == choice), dice_rolls)
-    return sum(filter_rolls)
