@@ -49,7 +49,7 @@ def get_words_matching_smorse(smorse):
 
 def get_words_matching_smorse_predicate(fun, file=None):
     if not file:
-        files_to_search = glob.glob("smorse_to_word/*.txt")
+        files_to_search = glob.glob("smorse_to_word/*")
     else:
         files_to_search = ["smorse_to_word/" + file]
 
@@ -62,12 +62,38 @@ def get_words_matching_smorse_predicate(fun, file=None):
                     results.append(word_pair[1].strip())
     return results
 
+
 # Bonus 1 #
-def get_smorse_for_13_words():
+def get_one_smorse_matching_13_words():
     return ""
 
-# Bonus 2 #
 
 # Bonus 2 #
+def contains_15_dashes(string):
+    return "-" * 15 in string
+
+
+def get_word_for_15_dash_smorse():
+    fifteen_dash_word = get_words_matching_smorse_predicate(contains_15_dashes)[0]
+    print(fifteen_dash_word)
+    return smorse(fifteen_dash_word)
+
+
+print(get_word_for_15_dash_smorse())
+
+
+# Bonus 3 #
+def get_21_letter_word_with_perfectly_balanced_smorse():
+    return ""
+
+
+# Bonus 4 #
+def get_13_letter_word_that_is_smorse_palindrome():
+    return ""
+
+
+# Bonus 5 #
+def get_four_13_character_non_occuring_smorse_sequences():
+    return ""
 
 # readFile("enable1.txt")
