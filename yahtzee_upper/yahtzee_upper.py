@@ -1,5 +1,4 @@
 def yahtzee_upper(dice_rolls):
-    dice_rolls = sorted(dice_rolls)
     score_dict = {}
     for roll in dice_rolls:
         if roll in score_dict:
