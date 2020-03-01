@@ -36,6 +36,7 @@ def test_bonus_1_should_return_13_different_words():
     assert len(word_pairs) == 13
     for wp in word_pairs:
         assert wp.smorse == sequence
+        print("\n", wp.word, "=", wp.smorse)
 
 
 # BONUS 2 # Find the word with 15 dashes in a row.
@@ -61,6 +62,7 @@ def test_bonus_4_should_return_13_letter_smorse_palindrome():
     word_pair = get_13_letter_word_that_is_smorse_palindrome()
     assert len(word_pair.word) == 13
     assert word_pair.smorse == word_pair.smorse[::-1]
+    print("\n", word_pair.word, "=", word_pair.smorse)
 
 
 # BONUS 5 #  --.---.---.-- is one of five 13-character sequences that does not appear in the encoding of any word.
@@ -71,3 +73,4 @@ def test_bonus_5_should_return_4_non_occuring_sequences():
     assert len(sequences) == 4
     for seq in sequences:
         assert len(get_words_matching_smorse(seq)) == 0
+    print("\n", sequences)

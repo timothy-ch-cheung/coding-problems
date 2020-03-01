@@ -109,8 +109,12 @@ def get_perfectly_balanced_words_21_letter():
 
 
 # Bonus 4 #
+def is_palindrome(string):
+    return string == string[::-1]
+
+
 def get_13_letter_word_that_is_smorse_palindrome():
-    return WordPair("", "")
+    return get_word_pairs_matching_predicate(is_palindrome, directory=Type.WORD.value, file = "13letters", string_type=Type.SMORSE)[0]
 
 
 # Bonus 5 #
