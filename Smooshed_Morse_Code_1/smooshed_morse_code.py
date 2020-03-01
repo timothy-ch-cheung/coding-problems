@@ -9,6 +9,11 @@ class WordPair():
         self.word = word
         self.smorse = smorse
 
+    def __eq__(self, other):
+        if not isinstance(other, WordPair):
+            return NotImplemented
+        return self.word == other.word and self.smorse == other.word
+
 
 class Type(Enum):
     SMORSE = "smorse_to_word"
@@ -49,18 +54,8 @@ def read_file(file_name):
                 count += 1
 
 
-def get_words_matching_smorse(smorse):
-    smorsed_word_length = len(smorse)
-    results = []
-    with open("smorse_to_word/" + str(smorsed_word_length) + "chars", "a+") as smorse_to_word_file:
-        for line in smorse_to_word_file:
-            word_pair = line.split("=")
-            if word_pair[0] == smorse:
-                results.append(word_pair[1].strip())
-    return results
 
-
-def get_words_matching_smorse_predicate(fun, directory=None, file=None, string_type=None):
+def get_word_pairs_matching_predicate(fun, directory=None, file=None, string_type=None):
     if not string_type or not directory:
         return
     if not file:
@@ -80,9 +75,14 @@ def get_words_matching_smorse_predicate(fun, directory=None, file=None, string_t
     return results
 
 
+
+def get_words_matching_smorse(smorse):
+    return get_word_pairs_matching_predicate(lambda x: x == smorse, directory=Type.SMORSE.value, string_type=Type.SMORSE)
+
+
 # Bonus 1 #
 def get_one_smorse_matching_13_words():
-    return ""
+    return []
 
 
 # Bonus 2 #
@@ -91,12 +91,9 @@ def contains_15_dashes(string):
 
 
 def get_word_for_15_dash_smorse():
-    fifteen_dash_word = \
-    get_words_matching_smorse_predicate(contains_15_dashes, directory=Type.SMORSE.value, string_type=Type.SMORSE)[0]
-    return smorse(fifteen_dash_word.word)
-
-
-# print(get_word_for_15_dash_smorse())
+    fifteen_dash_words = \
+        get_word_pairs_matching_predicate(contains_15_dashes, directory=Type.SMORSE.value, string_type=Type.SMORSE)
+    return fifteen_dash_words[0]
 
 
 # Bonus 3 #
@@ -105,24 +102,19 @@ def is_perfectly_balanced(string):
 
 
 def get_perfectly_balanced_words_21_letter():
-    results = get_words_matching_smorse_predicate(is_perfectly_balanced, directory=Type.WORD.value, file="21letters",
-                                                  string_type=Type.SMORSE)
+    results = get_word_pairs_matching_predicate(is_perfectly_balanced, directory=Type.WORD.value, file="21letters",
+                                                string_type=Type.SMORSE)
     result = next(filter(lambda x: x.word != "counterdemonstrations", results))
-    return result.word
-
-
-# Bonus 3 #
-def get_21_letter_word_with_perfectly_balanced_smorse():
-    return ""
+    return result
 
 
 # Bonus 4 #
 def get_13_letter_word_that_is_smorse_palindrome():
-    return ""
+    return WordPair("", "")
 
 
 # Bonus 5 #
 def get_four_13_character_non_occuring_smorse_sequences():
-    return ""
+    return []
 
 # read_file("enable1.txt")
