@@ -1,5 +1,6 @@
 import glob
 from enum import Enum
+from pathlib import Path
 
 from pathlib import Path
 
@@ -117,4 +118,4 @@ def get_13_letter_word_that_is_smorse_palindrome():
 def get_four_13_character_non_occuring_smorse_sequences():
     return []
 
-# read_file("enable1.txt")
+# read_file(Path.cwd().parent + "/enable1.txt")
