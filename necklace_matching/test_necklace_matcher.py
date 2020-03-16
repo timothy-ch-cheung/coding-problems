@@ -1,5 +1,6 @@
 from necklace_matching.necklace_matcher import same_necklace
 
+
 def test_same_necklace():
     assert same_necklace("nicole", "icolen") is True
     assert same_necklace("nicole", "lenico") is True
