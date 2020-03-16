@@ -26,7 +26,8 @@ def test_repeats():
 
 def test_get_4_words_same_necklace():
     words = get_4_words_same_necklace()
-    assert words == 4
+    assert len(words) == 4
     for word_a in words:
         for word_b in words:
             assert same_necklace(word_a, word_b) is True
+    print(words)

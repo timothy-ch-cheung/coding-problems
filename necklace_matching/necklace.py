@@ -35,3 +35,13 @@ class Necklace:
         if not isinstance(obj, Necklace):
             return False
         return self.nodes == obj.nodes
+
+    def __hash__(self):
+        result = []
+        result_hash = ""
+        for node in self.nodes:
+            result.append(node.__hash__())
+        result = sorted(result)
+        for node in result:
+            result_hash += str(node)
+        return hash(result_hash)
