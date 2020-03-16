@@ -8,7 +8,15 @@ def same_necklace(string_a, string_b):
 
 
 def repeats(string):
-    return 0
+    if not string:
+        return 1
+    count = 0
+    repeated = string + string
+    for i in range(len(string)):
+        temp = repeated[i:i + len(string)]
+        if string == temp:
+            count += 1
+    return count
 
 
 def get_4_words_same_necklace():
