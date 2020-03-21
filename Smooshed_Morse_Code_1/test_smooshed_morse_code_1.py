@@ -1,6 +1,7 @@
 from Smooshed_Morse_Code_1.smooshed_morse_code import smorse, get_word_for_15_dash_smorse, \
     get_perfectly_balanced_words_21_letter, get_13_letter_word_that_is_smorse_palindrome, get_words_matching_smorse, \
-    get_four_13_character_non_occuring_smorse_sequences, get_one_smorse_matching_13_words
+    get_four_13_character_non_occuring_smorse_sequences, get_one_smorse_matching_13_words, build_smorse_trie, WordPair, \
+    Trie, traverse
 
 
 # Smorse Tests #
@@ -31,12 +32,13 @@ def test_get_words_matching_smorse():
 
 # BONUS 1 # Find the only sequence that's the code for 13 different words.
 def test_bonus_1_should_return_13_different_words():
-    word_pairs = set(get_one_smorse_matching_13_words())
-    sequence = word_pairs[0].smorse
-    assert len(word_pairs) == 13
-    for wp in word_pairs:
-        assert wp.smorse == sequence
-        print("\n", wp.word, "=", wp.smorse)
+    results = get_one_smorse_matching_13_words()
+    words = results[0]
+    sequence = results[1]
+    assert len(words) == 13
+    for word in words:
+        assert smorse(word) == sequence
+        print("\n", word, "=", sequence)
 
 
 # BONUS 2 # Find the word with 15 dashes in a row.
@@ -74,3 +76,33 @@ def test_bonus_5_should_return_4_non_occuring_sequences():
     for seq in sequences:
         assert len(get_words_matching_smorse(seq)) == 0
     print("\n", sequences)
+
+
+# Helper method tests
+a = WordPair("a", "-")
+b = WordPair("b", "-.")
+c = WordPair("c", "-..")
+words = [a, b, c]
+
+
+def test_build_trie():
+    expected_trie = Trie("")
+    c_trie = Trie(".")
+    c_trie.words = ["c"]
+    b_trie = Trie(".")
+    b_trie.words = ["b"]
+    b_trie.next_chars = [c_trie]
+    a_trie = Trie("-")
+    a_trie.words = ["a"]
+    a_trie.next_chars = [b_trie]
+    expected_trie.next_chars = [a_trie]
+
+    actual_trie = build_smorse_trie(words)
+
+    assert expected_trie == actual_trie
+
+
+def test_traverse_helper():
+    trie = build_smorse_trie(words)
+    results = traverse(trie, lambda x: x.words == ["a"])
+    assert [(['a'], '-')] == results

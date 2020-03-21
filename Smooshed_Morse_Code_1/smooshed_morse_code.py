@@ -3,6 +3,13 @@ from enum import Enum
 
 from pathlib import Path
 
+MORSE = ".- -... -.-. -.. . ..-. --. .... .. .--- -.- .-.. -- -. --- .--. --.- .-. ... - ..- ...- .-- -..- -.-- " \
+        "--.. ".split(" ")
+LOWER_CASE_OFFSET = 97
+
+MORSE_CODE = {chr(i + LOWER_CASE_OFFSET): MORSE[i] for i in range(0, len(MORSE))}
+print(MORSE_CODE)
+
 
 class WordPair():
     def __init__(self, word, smorse):
@@ -20,12 +27,32 @@ class Type(Enum):
     WORD = "word_to_smorse"
 
 
-MORSE = ".- -... -.-. -.. . ..-. --. .... .. .--- -.- .-.. -- -. --- .--. --.- .-. ... - ..- ...- .-- -..- -.-- " \
-        "--.. ".split(" ")
-LOWER_CASE_OFFSET = 97
+class Trie():
+    def __init__(self, char):
+        self.char = char
+        self.words = []
+        self.next_chars = []
 
-MORSE_CODE = {chr(i + LOWER_CASE_OFFSET): MORSE[i] for i in range(0, len(MORSE))}
-print(MORSE_CODE)
+    def insert(self, string, word):
+        length = len(string)
+        if length == 0:
+            self.words.append(word)
+            return
+        for char in self.next_chars:
+            if string[0] == char.char:
+                return char.insert(string[1:], word)
+        self.next_chars.append(Trie(string[0]))
+        return self.next_chars[-1].insert(string[1:], word)
+
+    def __eq__(self, other):
+        if not isinstance(other, Trie):
+            return NotImplemented
+        if self.char != other.char or self.words != other.words:
+            return False
+        for self_next, other_next in zip(self.next_chars, other.next_chars):
+            if self_next != other_next:
+                return False
+        return True
 
 
 def smorse(word):
@@ -54,7 +81,6 @@ def read_file(file_name):
                 count += 1
 
 
-
 def get_word_pairs_matching_predicate(fun, directory=None, file=None, string_type=None):
     if not string_type or not directory:
         return
@@ -75,14 +101,38 @@ def get_word_pairs_matching_predicate(fun, directory=None, file=None, string_typ
     return results
 
 
-
 def get_words_matching_smorse(smorse):
-    return get_word_pairs_matching_predicate(lambda x: x == smorse, directory=Type.SMORSE.value, string_type=Type.SMORSE)
+    return get_word_pairs_matching_predicate(lambda x: x == smorse, directory=Type.SMORSE.value,
+                                             string_type=Type.SMORSE)
 
 
 # Bonus 1 #
+def build_smorse_trie(words):
+    trie = Trie("")
+    for word_pair in words:
+        trie.insert(word_pair.smorse, word_pair.word)
+    return trie
+
+
+def traverse_helper(trie, fun, smorse):
+    results = []
+    for char in trie.next_chars:
+        results += traverse_helper(char, fun, smorse + char.char)
+    if fun(trie):
+        results.append((trie.words, smorse))
+    return results
+
+
+def traverse(trie, fun):
+    return traverse_helper(trie, fun, "")
+
+
 def get_one_smorse_matching_13_words():
-    return []
+    TRIE = build_smorse_trie(get_word_pairs_matching_predicate(lambda x: True, directory=Type.SMORSE.value,
+                                                               string_type=Type.SMORSE))
+    results = traverse(TRIE, lambda x: len(x.words) == 13)
+    print(results)
+    return results[0]
 
 
 # Bonus 2 #
@@ -114,7 +164,8 @@ def is_palindrome(string):
 
 
 def get_13_letter_word_that_is_smorse_palindrome():
-    return get_word_pairs_matching_predicate(is_palindrome, directory=Type.WORD.value, file = "13letters", string_type=Type.SMORSE)[0]
+    return get_word_pairs_matching_predicate(is_palindrome, directory=Type.WORD.value, file="13letters",
+                                             string_type=Type.SMORSE)[0]
 
 
 # Bonus 5 #
