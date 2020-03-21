@@ -1,5 +1,6 @@
 import glob
 from enum import Enum
+from pathlib import Path
 
 from pathlib import Path
 
@@ -64,17 +65,17 @@ def smorse(word):
 
 def read_file(file_name):
     with open(file_name) as file:
-        Path(Type.WORD + "/").mkdir(parents=True, exist_ok=True)
-        Path(Type.SMORSE + "/").mkdir(parents=True, exist_ok=True)
+        Path(Type.WORD.value + "/").mkdir(parents=True, exist_ok=True)
+        Path(Type.SMORSE.value + "/").mkdir(parents=True, exist_ok=True)
         count = 0
         for idx, word in enumerate(file):
             word = word.strip()
             word_length = len(word)
             smorsed_word = smorse(word)
             smorsed_word_length = len(smorsed_word)
-            with open(Type.SMORSE + "/" + str(smorsed_word_length) + "chars", "a+") as smorse_to_word_file:
+            with open(Type.SMORSE.value + "/" + str(smorsed_word_length) + "chars", "a+") as smorse_to_word_file:
                 smorse_to_word_file.write(word + "=" + smorsed_word + "\n")
-            with open(Type.WORD + "/" + str(word_length) + "letters", "a+") as word_to_smorse_file:
+            with open(Type.WORD.value + "/" + str(word_length) + "letters", "a+") as word_to_smorse_file:
                 word_to_smorse_file.write(word + "=" + smorsed_word + "\n")
             if idx % 1000 == 0:
                 print("processed {} thousand words".format(count))
@@ -172,4 +173,4 @@ def get_13_letter_word_that_is_smorse_palindrome():
 def get_four_13_character_non_occuring_smorse_sequences():
     return []
 
-# read_file("enable1.txt")
+# read_file(str(Path.cwd().parent) + "/enable1.txt")
