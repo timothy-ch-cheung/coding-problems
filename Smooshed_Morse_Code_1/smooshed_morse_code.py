@@ -1,12 +1,12 @@
 import glob
 from enum import Enum
-from pathlib import Path
 
 from pathlib import Path
 
 MORSE = ".- -... -.-. -.. . ..-. --. .... .. .--- -.- .-.. -- -. --- .--. --.- .-. ... - ..- ...- .-- -..- -.-- " \
         "--.. ".split(" ")
 LOWER_CASE_OFFSET = 97
+SYMBOLS = {'.', '-'}
 
 MORSE_CODE = {chr(i + LOWER_CASE_OFFSET): MORSE[i] for i in range(0, len(MORSE))}
 print(MORSE_CODE)
@@ -84,11 +84,15 @@ def read_file(file_name):
 
 def get_word_pairs_matching_predicate(fun, directory=None, file=None, string_type=None):
     if not string_type or not directory:
-        return
+        return []
     if not file:
         files_to_search = glob.glob(directory + "/*")
     else:
-        files_to_search = [directory + "/" + file]
+        path = Path(directory + "/" + file)
+        if path.exists():
+            files_to_search = [directory + "/" + file]
+        else:
+            return []
 
     results = []
     for files in files_to_search:
@@ -108,11 +112,16 @@ def get_words_matching_smorse(smorse):
 
 
 # Bonus 1 #
+
 def build_smorse_trie(words):
     trie = Trie("")
     for word_pair in words:
         trie.insert(word_pair.smorse, word_pair.word)
     return trie
+
+
+TRIE = build_smorse_trie(get_word_pairs_matching_predicate(lambda x: True, directory=Type.SMORSE.value,
+                                                           string_type=Type.SMORSE))
 
 
 def traverse_helper(trie, fun, smorse):
@@ -129,8 +138,6 @@ def traverse(trie, fun):
 
 
 def get_one_smorse_matching_13_words():
-    TRIE = build_smorse_trie(get_word_pairs_matching_predicate(lambda x: True, directory=Type.SMORSE.value,
-                                                               string_type=Type.SMORSE))
     results = traverse(TRIE, lambda x: len(x.words) == 13)
     print(results)
     return results[0]
@@ -170,7 +177,68 @@ def get_13_letter_word_that_is_smorse_palindrome():
 
 
 # Bonus 5 #
+def get_permutations_helper(length, string):
+    results = []
+    if (length == 0):
+        return [string]
+    for symbol in SYMBOLS:
+        results += get_permutations_helper(length - 1, string + symbol)
+    return results
+
+
+def get_permutations(length):
+    return get_permutations_helper(length, "")
+
+
 def get_four_13_character_non_occuring_smorse_sequences():
-    return []
+    results = []
+    permutations = get_permutations(13)
+    for p in permutations:
+        non_occuring = True
+        for i in range(13, 79):
+            file = "smorse_to_word/" + str(i) + "chars"
+            path = Path(file)
+            if path.exists():
+                with open(file) as current_file:
+                    for line in current_file:
+                        pair = line.strip().split("=")
+                        word_pair = WordPair(pair[0], pair[1])
+                        if p in word_pair.smorse:
+                            non_occuring = False
+                            break
+            if non_occuring is False:
+                break
+        if non_occuring:
+            if len(results) == 4:
+                return results
+            results.append(p)
+    return results
+
+
+# Unused functions
+def generate_remaining(prefix, length):
+    results = []
+    if length == 0:
+        return [prefix]
+    for symbol in SYMBOLS:
+        results += generate_remaining(prefix + symbol, length - 1)
+    return results
+
+
+def get_non_ocurring_helper(trie, current_depth, string):
+    next_symbols = set([x.char for x in trie.next_chars])
+    missing_symbols = SYMBOLS - next_symbols
+    results = []
+    if current_depth == 0:
+        return []
+    for symbol in missing_symbols:
+        results += generate_remaining(string + symbol, current_depth - 1)
+    for symbol in trie.next_chars:
+        results += get_non_ocurring_helper(symbol, current_depth - 1, string + symbol.char)
+    return results
+
+
+def get_non_ocurring(trie, target_depth):
+    return get_non_ocurring_helper(trie, target_depth, "")
 
 # read_file(str(Path.cwd().parent) + "/enable1.txt")

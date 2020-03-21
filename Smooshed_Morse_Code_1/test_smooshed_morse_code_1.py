@@ -1,7 +1,7 @@
 from Smooshed_Morse_Code_1.smooshed_morse_code import smorse, get_word_for_15_dash_smorse, \
     get_perfectly_balanced_words_21_letter, get_13_letter_word_that_is_smorse_palindrome, get_words_matching_smorse, \
     get_four_13_character_non_occuring_smorse_sequences, get_one_smorse_matching_13_words, build_smorse_trie, WordPair, \
-    Trie, traverse
+    Trie, traverse, generate_remaining, get_non_ocurring, get_permutations
 
 
 # Smorse Tests #
@@ -71,7 +71,8 @@ def test_bonus_4_should_return_13_letter_smorse_palindrome():
 # Find the other four.
 def test_bonus_5_should_return_4_non_occuring_sequences():
     sequences = get_four_13_character_non_occuring_smorse_sequences()
-    sequences = [x != "--.---.---.--" for x in sequences]
+    sequences = [x for x in sequences if x != "--.---.---.--"]
+    print(sequences)
     assert len(sequences) == 4
     for seq in sequences:
         assert len(get_words_matching_smorse(seq)) == 0
@@ -106,3 +107,26 @@ def test_traverse_helper():
     trie = build_smorse_trie(words)
     results = traverse(trie, lambda x: x.words == ["a"])
     assert [(['a'], '-')] == results
+
+
+def test_generate_remaining():
+    assert sorted(generate_remaining("-", 2)) == sorted(["---", "--.", "-..", "-.-"])
+
+
+def test_get_non_ocurring():
+    trie = build_smorse_trie(words)
+    assert sorted(get_non_ocurring(trie, 1)) == sorted(["."])
+
+
+def test_get_non_ocurring():
+    trie = build_smorse_trie(words)
+    assert sorted(get_non_ocurring(trie, 2)) == sorted(["--", ".-", ".."])
+
+
+def test_get_non_ocurring_len_3():
+    trie = build_smorse_trie(words)
+    assert sorted(get_non_ocurring(trie, 3)) == sorted(["---", "--.", "-.-", ".--", ".-.", "..-", "..."])
+
+
+def test_get_permutations_helper():
+    assert sorted(get_permutations(2)) == sorted(["--", "-.", ".-", ".."])
