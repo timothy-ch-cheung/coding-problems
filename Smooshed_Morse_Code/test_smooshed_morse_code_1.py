@@ -1,4 +1,4 @@
-from Smooshed_Morse_Code_1.smooshed_morse_code import smorse, get_word_for_15_dash_smorse, \
+from Smooshed_Morse_Code.smooshed_morse_code_1 import smorse, get_word_for_15_dash_smorse, \
     get_perfectly_balanced_words_21_letter, get_13_letter_word_that_is_smorse_palindrome, get_words_matching_smorse, \
     get_four_13_character_non_occuring_smorse_sequences, get_one_smorse_matching_13_words, build_smorse_trie, WordPair, \
     Trie, traverse, generate_remaining, get_non_ocurring, get_permutations
