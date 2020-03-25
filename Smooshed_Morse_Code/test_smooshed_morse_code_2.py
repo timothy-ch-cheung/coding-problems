@@ -15,6 +15,13 @@ def test_smalpha(alpha_permutation):
     assert_valid_smalpha(alpha_permutation, smalpha(alpha_permutation))
 
 
+def test_smalpha_1000():
+    with open("smorse2-bonus1.in") as file:
+        for line in file:
+            line = line.strip()
+            assert_valid_smalpha(line, smalpha(line))
+
+
 def assert_valid_smalpha(input_smorse, output_alpha):
     assert len(output_alpha) == 26
     assert smorse(output_alpha) == input_smorse
