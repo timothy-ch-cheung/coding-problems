@@ -18,4 +18,7 @@ def smalpha_helper(smorse_string, alphabet, alphabet_left):
 
 
 def smalpha(smorse_string):
-    return smalpha_helper(smorse_string, "", "abcdefghijklmnopqrstuvwxyz")
+    morse_code = list(MORSE_CODE_INVERSE.keys())
+    morse_code.sort(key=lambda s: len(s), reverse=True)
+    alphabet = "".join([MORSE_CODE_INVERSE[m] for m in morse_code])
+    return smalpha_helper(smorse_string, "", alphabet)

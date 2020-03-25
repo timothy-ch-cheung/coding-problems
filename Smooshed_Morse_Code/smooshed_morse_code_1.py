@@ -4,7 +4,7 @@ from enum import Enum
 from pathlib import Path
 
 MORSE = ".- -... -.-. -.. . ..-. --. .... .. .--- -.- .-.. -- -. --- .--. --.- .-. ... - ..- ...- .-- -..- -.-- " \
-        "--.. ".split(" ")
+        "--..".split(" ")
 LOWER_CASE_OFFSET = 97
 SYMBOLS = {'.', '-'}
 
